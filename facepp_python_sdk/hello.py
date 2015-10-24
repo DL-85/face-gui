@@ -59,8 +59,7 @@ for name, face in FACES.iteritems():
 # Step 2: create persons using the face_id
 # 步骤2：引用face_id，创建新的person
 for name, face in FACES.iteritems():
-    rst = api.person.create(
-            person_name = name, face_id = face['face'][0]['face_id'])
+    rst = api.person.create(person_name = name, face_id = face['face'][0]['face_id'])
     print_result('create person {}'.format(name), rst)
 
 # Step 3: create a new group and add those persons in it

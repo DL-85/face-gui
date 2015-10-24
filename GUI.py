@@ -42,7 +42,12 @@ class FaceWizard(object):
         if gui:
             self._banner = Tk.Label(self._root, fg='blue',
                 font=tkFont.Font(family='Helvetica', size=24, 
-                    weight='bold'), text='Face Wizard').grid()
+                    weight='bold'), text='Face Wizard').grid(row=0)
+
+            # Tk.Label(self._root,
+            #     font=tkFont.Font(family='Helvetica', size=12,), 
+            #     text='Choose a photo to train:').grid(row=0, column=3)
+
 
             self._dir_input = Tk.Entry(self._root, width=40,
                 textvariable=self._cwd)
@@ -62,10 +67,10 @@ class FaceWizard(object):
 
 
             self._upload_button = Tk.Button(text='Upload', 
-                command=self.upload_photo).grid(row=5, column=3)
+                command=self.upload_photo, width=6).grid(row=2, column=7)
             self._monitor_button = Tk.Button(text='Monitor', 
-                command=self.monitor_directory)
-            self._monitor_button.grid(row=5, column=4)
+                command=self.monitor_directory, width=6)
+            self._monitor_button.grid(row=4, column=7)
 
 
     def open_file(self):
@@ -74,8 +79,8 @@ class FaceWizard(object):
         self._dir_input.insert(index=0, 
             string=self._cwd)
         self._photo = ImageTk.PhotoImage(Image.open(self._cwd))
-        self._imageshow = Tk.Label(image=self._photo).grid(row=1, column=0,
-            columnspan=6)
+        self._imageshow = Tk.Label(image=self._photo, height=400, 
+            width=400).grid(row=1, column=0, columnspan=6)
 
 
     def choose_directory(self):
@@ -85,8 +90,9 @@ class FaceWizard(object):
             string=self._directory)
 
 
-
     def upload_photo(self):
+        if not self._cwd:
+            return
         self.w = popupWindow(self._root)
         self._root.wait_window(self.w.top)
         name = self.w.value
