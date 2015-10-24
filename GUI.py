@@ -7,11 +7,14 @@
 # License: Apache
 
 import os
+from sys import argv
+from threading import Thread
+
 import Tkinter as Tk
 import tkFont
 from tkFileDialog import askopenfilename, askdirectory
 from PIL import Image, ImageTk
-from threading import Thread
+
 from facepp_python_sdk.facepp import API, File
 
 
@@ -20,10 +23,14 @@ API_SECRET = 'HjmsDT4WZqOU0xzFfmO_0uCQXyLdR8Tw'
 api = API(API_KEY, API_SECRET)
 
 
+def uploadPhoto(photo):
+    pass
+
+
 class FaceWizard(object):
 
 
-    def __init__(self, cwd=None, directory=None):
+    def __init__(self, gui=True, cwd=None, directory=None):
         self._root = Tk.Tk()
         self._root.title('Face Wizard v0.1')
         
@@ -31,31 +38,32 @@ class FaceWizard(object):
         self._cwd = cwd
         self._directory = directory
 
-        self._banner = Tk.Label(self._root, fg='blue',
-            font=tkFont.Font(family='Helvetica', size=24, 
-                weight='bold'), text='Face Wizard').grid()
+        if gui:
+            self._banner = Tk.Label(self._root, fg='blue',
+                font=tkFont.Font(family='Helvetica', size=24, 
+                    weight='bold'), text='Face Wizard').grid()
 
-        self._dir_input = Tk.Entry(self._root, width=40,
-            textvariable=self._cwd)
-        self._dir_input.grid(row=2, column=0, columnspan=6)
-        self._choose_button = Tk.Button(text="Choose...",
-            command=self.open_file, width=8).grid(row=2, column=6)
+            self._dir_input = Tk.Entry(self._root, width=40,
+                textvariable=self._cwd)
+            self._dir_input.grid(row=2, column=0, columnspan=6)
+            self._choose_button = Tk.Button(text="Choose...",
+                command=self.open_file, width=8).grid(row=2, column=6)
 
-        Tk.Label(self._root,
-            font=tkFont.Font(family='Helvetica', size=12, 
-                ), text='Or choose directory to monitor:').grid(row=3)
+            Tk.Label(self._root,
+                font=tkFont.Font(family='Helvetica', size=12, 
+                    ), text='Or choose directory to monitor:').grid(row=3)
 
-        self._pwd_input = Tk.Entry(self._root, width=40,
-            textvariable=self._cwd)
-        self._pwd_input.grid(row=4, column=0, columnspan=6)
-        self._choose_button = Tk.Button(text="Choose...",
-            command=self.choose_directory, width=8).grid(row=4, column=6)
+            self._pwd_input = Tk.Entry(self._root, width=40,
+                textvariable=self._cwd)
+            self._pwd_input.grid(row=4, column=0, columnspan=6)
+            self._choose_button = Tk.Button(text="Choose...",
+                command=self.choose_directory, width=8).grid(row=4, column=6)
 
 
-        self._upload_button = Tk.Button(text='Upload', 
-            command=self.upload_photo).grid(row=5, column=3)
-        self._monitor_button = Tk.Button(text='Monitor', 
-            command=self.monitor_directory).grid(row=5, column=4)
+            self._upload_button = Tk.Button(text='Upload', 
+                command=self.upload_photo).grid(row=5, column=3)
+            self._monitor_button = Tk.Button(text='Monitor', 
+                command=self.monitor_directory).grid(row=5, column=4)
 
 
     def open_file(self):
@@ -87,7 +95,10 @@ class FaceWizard(object):
 
 
     def monitor_directory(self):
+        self._monitor_button. = Tk.Button(text='Monitor', 
+            command=self.monitor_directory).grid(row=5, column=4)
         ls = os.listdir(self._directory)
+        ntd = Thread(uploadPhoto())
 
 
 
