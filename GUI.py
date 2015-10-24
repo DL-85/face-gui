@@ -9,6 +9,7 @@
 import os
 from sys import argv
 from threading import Thread
+from time import sleep
 
 import Tkinter as Tk
 import tkFont
@@ -20,11 +21,11 @@ from facepp_python_sdk.facepp import API, File
 
 API_KEY = 'd493d00d51c972ff9dbcc7cf7c038c2c' 
 API_SECRET = 'HjmsDT4WZqOU0xzFfmO_0uCQXyLdR8Tw'
+GROUP_NAME = 'hackathon'
 api = API(API_KEY, API_SECRET)
 
 
-def uploadPhoto(photo):
-    pass
+
 
 
 class FaceWizard(object):
@@ -63,7 +64,8 @@ class FaceWizard(object):
             self._upload_button = Tk.Button(text='Upload', 
                 command=self.upload_photo).grid(row=5, column=3)
             self._monitor_button = Tk.Button(text='Monitor', 
-                command=self.monitor_directory).grid(row=5, column=4)
+                command=self.monitor_directory)
+            self._monitor_button.grid(row=5, column=4)
 
 
     def open_file(self):
@@ -92,17 +94,47 @@ class FaceWizard(object):
         print details
         api.person.create(person_name = name, 
             face_id = details['face'][0]['face_id'])
+        api.group.add_person(group_name=GROUP_NAME, person_name=name)
+        rst = api.train.identify(group_name=GROUP_NAME)
+        api.wait_async(rst['session_id'])
 
 
     def monitor_directory(self):
-        self._monitor_button. = Tk.Button(text='Monitor', 
-            command=self.monitor_directory).grid(row=5, column=4)
-        ls = os.listdir(self._directory)
-        ntd = Thread(uploadPhoto())
+        self._monitor_button.configure(text='Stop', 
+            command=self.reset)
+        waits = []
+        if self._directory:
+            nlp = Thread(target=self.uploadPhotod)
+            nlp.start()
+            # nlp.join()
+
+        # self._monitor_button.configure(text='Monitor', 
+        #     command=self.monitor_directory)
 
 
+    def uploadPhotod(self):
+        ls = set(os.listdir(self._directory))
+        while self._directory:
+            newfile = set(os.listdir(self._directory)) - ls
+            if newfile:
+                ls = set(os.listdir(self._directory))
+                for f in newfile:
+                    if f.endswith(('.jpg', '.jpeg')):
+                        detalla = api.detection.detect()
+                        rst = api.recognition.identify(group_name=GROUP_NAME, 
+                            img=File(f))
+                        print_result('recognition result', rst)
+                        print '=' * 60
+                        print 'The person with highest confidence:', \
+                        rst['face'][0]['candidate'][0]['person_name']
+
+            sleep(5)
+        self._monitor_button.configure(text='Monitor', 
+            command=self.monitor_directory)
 
 
+    def reset(self):
+        self._directory = None
 
     def run(self):
         self._root.mainloop()
