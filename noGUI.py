@@ -98,7 +98,7 @@ class FaceWizard(object):
                 img=File(self._cwd))
             if rst['candidate']['confidence'] > 70:
                 welcome_back('asen_sdu@yeah.net', 'A new face detacted', detalla)
-            elif rst['candidate']['confidence'] < 10::
+            elif rst['candidate']['confidence'] < 10:
                 send_a_mail('asen_sdu@yeah.net', 'A new face detacted', detalla)
             print 'recognition result', rst
             print '=' * 60
