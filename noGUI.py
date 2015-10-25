@@ -95,12 +95,14 @@ class FaceWizard(object):
         detalla = api.detection.detect(img=File(self._cwd))
         if detalla['face']:
             send_a_mail('asen_sdu@yeah.net', 'A new face detacted', detalla)
-        rst = api.recognition.identify(group_name=GROUP_NAME, 
-            img=File(self._cwd))
-        print 'recognition result', rst
-        print '=' * 60
-        print 'The person with highest confidence:', \
-        rst['face'][0]['candidate'][0]['person_name']
+            rst = api.recognition.identify(group_name=GROUP_NAME, 
+                img=File(self._cwd))
+            print 'recognition result', rst
+            print '=' * 60
+            print 'The person with highest confidence:', \
+            rst['face'][0]['candidate'][0]['person_name']
+        else:
+            print 'No face.'
 
     def monitor_directory(self):
         # self._monitor_button.configure(text='Stop', 
