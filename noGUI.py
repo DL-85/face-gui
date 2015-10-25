@@ -96,10 +96,11 @@ class FaceWizard(object):
         if detalla['face']:
             rst = api.recognition.identify(group_name=GROUP_NAME, 
                 img=File(self._cwd))
-            if rst['candidate']['confidence'] > 70:
-                welcome_back('asen_sdu@yeah.net', 'A new face detacted', detalla)
-            elif rst['candidate']['confidence'] < 10:
-                send_a_mail('asen_sdu@yeah.net', 'A new face detacted', detalla)
+            if rst['candidate']:
+                if rst['candidate']['confidence'] > 70:
+                    welcome_back('asen_sdu@yeah.net', 'A new face detacted', detalla)
+                elif rst['candidate']['confidence'] < 10:
+                    send_a_mail('asen_sdu@yeah.net', 'A new face detacted', detalla)
             print 'recognition result', rst
             print '=' * 60
             print 'The person with highest confidence:', \
