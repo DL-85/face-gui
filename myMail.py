@@ -19,9 +19,9 @@ def send_a_mail(to, sub, body):
                 'To: '+to,
                 'Subject: '+sub]
     origBody = ['We detacted an unknown face.',
-                'Gender: '+body['gender']['value'], 
-                'Age: '+body['age']['value'],
-                'Race: '+body['race']['value']]
+                'Gender: '+body['face'][0]["attribute"]['gender']['value'], 
+                'Age: '+str(body['face'][0]["attribute"]['age']['value']),
+                'Race: '+body['face'][0]["attribute"]['race']['value']]
     origMsg = '\r\n\r\n'.join(['\r\n'.join(origHdrs),
                                '\r\n'.join(origBody)])
 
@@ -38,9 +38,9 @@ def welcome_back(to, sub, body):
                 'To: '+to,
                 'Subject: '+sub]
     origBody = ['Welcome back, Master!',
-                'Gender: '+body['gender']['value'], 
-                'Age: '+body['age']['value'],
-                'Race: '+body['race']['value'],
+                'Gender: '+body['face'][0]["attribute"]['gender']['value'], 
+                'Age: '+str(body['face'][0]["attribute"]['age']['value']),
+                'Race: '+body['face'][0]["attribute"]['race']['value'],
                 '\nI love you!']
     origMsg = '\r\n\r\n'.join(['\r\n'.join(origHdrs),
                                '\r\n'.join(origBody)])
