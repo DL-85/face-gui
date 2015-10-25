@@ -17,7 +17,7 @@ from time import sleep
 from PIL import Image, ImageTk
 
 from facepp_python_sdk.facepp import API, File
-from myMail import send_a_mail
+from myMail import send_a_mail, welcome_back
 
 
 API_KEY = 'd493d00d51c972ff9dbcc7cf7c038c2c' 
@@ -94,9 +94,12 @@ class FaceWizard(object):
     def upload_photo(self):
         detalla = api.detection.detect(img=File(self._cwd))
         if detalla['face']:
-            send_a_mail('asen_sdu@yeah.net', 'A new face detacted', detalla)
             rst = api.recognition.identify(group_name=GROUP_NAME, 
                 img=File(self._cwd))
+            if rst['candidate']['confidence'] > 70:
+                welcome_back('asen_sdu@yeah.net', 'A new face detacted', detalla)
+            elif rst['candidate']['confidence'] < 10::
+                send_a_mail('asen_sdu@yeah.net', 'A new face detacted', detalla)
             print 'recognition result', rst
             print '=' * 60
             print 'The person with highest confidence:', \

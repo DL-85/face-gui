@@ -18,7 +18,10 @@ def send_a_mail(to, sub, body):
     origHdrs = ['From: cxbats@126.com',
                 'To: '+to,
                 'Subject: '+sub]
-    origBody = body
+    origBody = ['We detacted an unknown face.',
+                'Gender: '+body['gender']['value'], 
+                'Age: '+body['age']['value'],
+                'Race: '+body['race']['value']]
     origMsg = '\r\n\r\n'.join(['\r\n'.join(origHdrs),
                                '\r\n'.join(origBody)])
 
@@ -29,6 +32,27 @@ def send_a_mail(to, sub, body):
                             origMsg)
     sendSvr.quit()
     print 'Mail sent.'
+
+def welcome_back(to, sub, body):
+    origHdrs = ['From: cxbats@126.com',
+                'To: '+to,
+                'Subject: '+sub]
+    origBody = ['Welcome back, Master!',
+                'Gender: '+body['gender']['value'], 
+                'Age: '+body['age']['value'],
+                'Race: '+body['race']['value'],
+                '\nI love you!']
+    origMsg = '\r\n\r\n'.join(['\r\n'.join(origHdrs),
+                               '\r\n'.join(origBody)])
+
+    sendSvr = SMTP(SMTPSVR)
+    print 'Sending mail...'
+    sendSvr.login('cxbats@126.com', 'nbenbi')
+    errs = sendSvr.sendmail('cxbats@126.com', to,
+                            origMsg)
+    sendSvr.quit()
+    print 'Mail sent.'
+
 
 
 # assert len(errs) == 0, errs
