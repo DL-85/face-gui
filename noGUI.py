@@ -17,6 +17,7 @@ from time import sleep
 from PIL import Image, ImageTk
 
 from facepp_python_sdk.facepp import API, File
+from myMail import send_a_mail
 
 
 API_KEY = 'd493d00d51c972ff9dbcc7cf7c038c2c' 
@@ -91,19 +92,15 @@ class FaceWizard(object):
 
 
     def upload_photo(self):
-        if not self._cwd:
-            return
-        self.w = popupWindow(self._root)
-        self._root.wait_window(self.w.top)
-        name = self.w.value
-        details = api.detection.detect(img=File(self._cwd))
-        print details
-        api.person.create(person_name = name, 
-            face_id = details['face'][0]['face_id'])
-        api.group.add_person(group_name=GROUP_NAME, person_name=name)
-        rst = api.train.identify(group_name=GROUP_NAME)
-        api.wait_async(rst['session_id'])
-
+        detalla = api.detection.detect(img=File(self._cwd))
+        if detalla['face']:
+            send_a_mail('asen_sdu@yeah.net', 'A new face detacted', detalla)
+        rst = api.recognition.identify(group_name=GROUP_NAME, 
+            img=File(self._cwd))
+        print 'recognition result', rst
+        print '=' * 60
+        print 'The person with highest confidence:', \
+        rst['face'][0]['candidate'][0]['person_name']
 
     def monitor_directory(self):
         # self._monitor_button.configure(text='Stop', 
@@ -171,17 +168,15 @@ def main():
     args = argv[1:]
 
     if not args:
-        print 'usage: --dir dir'
+        print 'usage: dir'
         exit(1)
 
-    todir = ''
-    if args[0] == '--dir':
-        todir = args[1]
-        del args[0:2]
+
+    todir = args[0]
 
 
-    ft = FaceWizard(directory=todir)
-    ft.monitor_directory()
+    ft = FaceWizard(cwd=todir)
+    ft.upload_photo()
 
 if __name__ == '__main__':
     main()
